@@ -1,0 +1,11 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.env
+# Misc
+.DS_Store
+.ipynb_checkpoints/
+.cache/
+.streamlit/

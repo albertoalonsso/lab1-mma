@@ -1,0 +1,12 @@
+openai
+anthropic
+deepseek-sdk
+transformers
+accelerate
+langchain
+llama-index
+pandas
+numpy
+streamlit
+python-dotenv
+tenacity
