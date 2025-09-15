@@ -43,7 +43,7 @@ class MultiModelAnalyzer:
             else:
                 decision = "stub"
 
-        # Selección optimizada por coste (si tienes router.py)
+        # Selección optimizada por coste 
         elif provider == "cost-aware":
             available = []
             if getattr(self.openai, "api_key", None):     available.append(("openai", self.openai.model))

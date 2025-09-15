@@ -34,6 +34,12 @@ with col1:
         res = asyncio.run(analyzer.analyze_sentiment(text, provider=provider))
         st.subheader("Resultado (single)")
         st.json(res)
+        meta = res.get("model_result", {}).get("routing_meta")
+        if meta:
+            st.info(
+                f"Router chose **{meta.get('provider')}**({meta.get('model')})"
+                f". estimated cost: ${meta.get('est_cost_usd', 0):.8f} . reason: {meta.get('reason')}"
+            )
 with col2:
     if st.button("Comparar (3)"):
         mm = MultiModelAnalyzer()
