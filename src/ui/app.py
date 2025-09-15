@@ -22,8 +22,9 @@ st.sidebar.json(env_keys_status())
 text = st.text_area("Pega una noticia / titular financiero",
                     "Acme Corp beats earnings expectations amid record growth.")
 
-mode = st.radio("Proveedor (single run)", ["stub (rule-based)", "openai", "anthropic", "deepseek", "auto"],
-                index=1, horizontal=True)
+mode = st.radio("Proveedor (single run)", ["stub (rule-based)", "openai", "anthropic", "deepseek", "auto", "cost-aware"],
+                 index=1, horizontal=True)
+
 provider = "stub" if mode.startswith("stub") else mode
 
 col1, col2 = st.columns([1,1])

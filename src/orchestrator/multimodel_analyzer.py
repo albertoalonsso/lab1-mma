@@ -6,6 +6,8 @@ from src.clients.openai_client import OpenAIClient
 from src.clients.deepseek_client import DeepkSeekClient
 from src.clients.anthropic_client import AnthropicClient
 
+from src.orchestrator.router import choose_provider
+
 class MultiModelAnalyzer:
     def __init__(self):
         load_dotenv(".env", override=True)
@@ -22,20 +24,44 @@ class MultiModelAnalyzer:
         return avail
     
 
-    async def analyze_with_routing(self, query: str, task_type: str = "news", provider: str = "stub") -> Dict[str, Any]:
+    async def analyze_with_routing(
+    self,
+    query: str,
+    task_type: str = "news",
+    provider: str = "stub",        # "openai" | "anthropic" | "deepseek" | "auto" | "cost-aware" | "stub"
+    ) -> Dict[str, Any]:
+
+        decision = provider
+        routing_meta = None
+
+        # Selección automática por disponibilidad
         if provider == "auto":
             for cand in ["openai", "deepseek", "anthropic"]:
                 if cand in self._available():
-                    provider = cand
+                    decision = cand
                     break
             else:
-                provider = "stub"
+                decision = "stub"
 
-        if provider == "openai":
+        # Selección optimizada por coste (si tienes router.py)
+        elif provider == "cost-aware":
+            available = []
+            if getattr(self.openai, "api_key", None):     available.append(("openai", self.openai.model))
+            if getattr(self.deepseek, "api_key", None):   available.append(("deepseek", self.deepseek.model))
+            if getattr(self.anthropic, "api_key", None):  available.append(("anthropic", self.anthropic.model))
+            if available:
+                choice = choose_provider(query, available, target="cheapest")
+                decision = choice["provider"]
+                routing_meta = choice
+            else:
+                decision = "stub"
+
+        # Ejecutamos la decisión
+        if decision == "openai":
             res = await self.openai.analyze(query)
-        elif provider == "anthropic":
+        elif decision == "anthropic":
             res = await self.anthropic.analyze(query)
-        elif provider == "deepseek":
+        elif decision == "deepseek":
             res = await self.deepseek.analyze(query)
         else:
             return {
@@ -46,9 +72,10 @@ class MultiModelAnalyzer:
             }
 
         return {
-            "router_decision": provider,
+            "router_decision": decision,
             "response": res,
             "keys_status": env_keys_status(),
+            "routing_meta": routing_meta,
             "task_type": task_type,
         }
     

@@ -1,0 +1,10 @@
+provider,model,ok,latency_ms,cost_usd,sentiment
+openai,gpt-4o-mini,True,2344.9,0.000166,bullish
+anthropic,claude-3-5-haiku-latest,True,1621.8,0.00028,bullish
+deepseek,deepseek-chat,True,5414.9,7.1e-05,bullish
+openai,gpt-4o-mini,True,1537.6,0.000176,bearish
+anthropic,claude-3-5-haiku-latest,True,1431.5,0.000318,bearish
+deepseek,deepseek-chat,True,5936.1,8.4e-05,bearish
+openai,gpt-4o-mini,True,1819.9,0.000163,neutral
+anthropic,claude-3-5-haiku-latest,True,1294.6,0.000279,neutral
+deepseek,deepseek-chat,True,5196.8,6.9e-05,neutral
